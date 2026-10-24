@@ -35,25 +35,25 @@ cd "$INSTALL_DIR"
 
 # ۲. ساخت فایل امن .env حاوی توکن‌های وارد شده
 echo "🔐 Saving credentials to .env..."
-sudo bash -c "cat > $INSTALL_DIR/.env <<EOF
+sudo tee "$INSTALL_DIR/.env" > /dev/null <<EOF
 API_ID=$API_ID
 API_HASH=$API_HASH
 BOT_TOKEN=$BOT_TOKEN
-EOF"
+EOF
 sudo chmod 600 "$INSTALL_DIR/.env"
 
 # ۳. ساخت خودکار فایل requirements.txt
 echo "📝 Creating requirements.txt..."
-sudo bash -c "cat > $INSTALL_DIR/requirements.txt <<'EOF'
+sudo tee "$INSTALL_DIR/requirements.txt" > /dev/null <<'EOF'
 pyrogram
 tgcrypto
 yt-dlp
 python-dotenv
-EOF"
+EOF
 
 # ۴. ساخت خودکار فایل bot.py
 echo "📝 Creating bot.py..."
-sudo bash -c "cat > $INSTALL_DIR/bot.py <<'EOF'
+sudo tee "$INSTALL_DIR/bot.py" > /dev/null <<'EOF'
 import os
 import re
 import asyncio
@@ -199,7 +199,7 @@ async def process_download(client, callback_query):
 if __name__ == "__main__":
     print("Bot is running...")
     app.run()
-EOF"
+EOF
 
 # ۵. ساخت محیط مجازی پایتون و نصب کتابخانه‌ها
 echo "🐍 Setting up Python virtual environment & installing packages..."
@@ -209,7 +209,7 @@ sudo "$INSTALL_DIR/venv/bin/pip" install -r "$INSTALL_DIR/requirements.txt"
 
 # ۶. ساخت سرویس دائمی لینوکس (Systemd) برای اجرای ۲۴ ساعته
 echo "⚙️ Configuring systemd service (uploader.service)..."
-sudo bash -c "cat > /etc/systemd/system/uploader.service <<EOF
+sudo tee /etc/systemd/system/uploader.service > /dev/null <<EOF
 [Unit]
 Description=Telegram Video Downloader & Uploader Bot
 After=network.target
@@ -224,7 +224,7 @@ RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
-EOF"
+EOF
 
 # ۷. فعال‌سازی و روشن کردن ربات
 sudo systemctl daemon-reload
